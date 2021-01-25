@@ -1,0 +1,11 @@
+import arc.*;
+public class test {
+  public static void main(String[] args) {
+     Console con = new Console();
+    for(int intCount = 0; intCount < 10; intCount++) {
+   
+    int dblMultiplier = (int)(Math.random() * 10 + 1);
+    con.println(dblMultiplier);
+    }
+  }
+}

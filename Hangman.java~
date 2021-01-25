@@ -1,0 +1,165 @@
+import arc.*;
+import java.util.List;
+import java.util.*;
+import java.awt.*;
+public class Hangman {
+  public static Console con = new Console("Hangman", 1024, 576);
+  public static Font GugiMenu = con.loadFont("Gugi.ttf",25);
+  public static Font GugiGame = con.loadFont("Gugi.ttf",40);
+  public static Font GugiLength = con.loadFont("Gugi.ttf",20);
+  public static void main(String[] args) {
+    Hangman.menu();
+  }
+  public static void menu() {
+    con.setDrawFont(GugiMenu);
+    con.setDrawColor(new Color(100,149,237));
+    con.fillRect(0, 0, 1024, 576);
+    con.setDrawColor(Color.RED);
+    con.fillRect(425, 188, 175, 40);
+    con.fillRect(425, 258, 175, 40);
+    con.fillRect(425, 328, 175, 40);
+    con.setDrawColor(Color.WHITE);
+    con.drawString("Play", 490, 185);
+    con.drawString("Instructions", 440, 255);
+    con.drawString("Quit", 490, 325);
+    con.repaint();
+    con.clear();
+    while (true) {
+      if (con.currentMouseButton() == 1 && con.currentMouseX() >= 425 && con.currentMouseX() <= 600 && con.currentMouseY() >= 188 && con.currentMouseY() <= 228) {
+        Hangman.game();
+      }
+      if (con.currentMouseButton() == 1 && con.currentMouseX() >= 425 && con.currentMouseX() <= 600 && con.currentMouseY() >= 258 && con.currentMouseY() <= 298) {
+        Hangman.instructions();
+      }
+      if (con.currentMouseButton() == 1 && con.currentMouseX() >= 425 && con.currentMouseX() <= 600 && con.currentMouseY() >= 328 && con.currentMouseY() <= 368) {
+        con.closeConsole();
+      }
+    }
+  }
+  public static void instructions() {
+    con.setDrawColor(Color.GRAY);
+    con.fillRect(0, 0, 1024, 576);
+    con.println("");
+    con.println("");
+    con.println("");
+    con.println("");
+    con.println("");
+    con.println("");
+    con.println("");
+    con.println("");
+    con.println("  The point of Hangman is for the user to guess the word that the program generates.");
+    con.println("      You do this by guessing one letter at a time. If the letter is in the word");
+    con.println("                       it will replace the blank space. If the ");
+    con.println("                 letter is not in the word you will lose a life.");
+    con.println("           If you lose all your lives before you guess the word you lose.");
+    con.setDrawColor(Color.RED);
+    con.fillRect(425, 400, 175, 40);
+    con.setDrawColor(Color.WHITE);
+    con.drawString("Menu", 490, 402);
+    while (true) {
+      if (con.currentMouseButton() == 1 && con.currentMouseX() >= 425 && con.currentMouseX() <= 600 && con.currentMouseY() >= 400 && con.currentMouseY() <= 440) {
+        Hangman.menu();
+      }
+    }
+  }
+  public static void game() {
+    con.setDrawFont(GugiMenu);
+    String strRandomWord = "", strMysteryWord, strGuessedWord,strLetter;
+    int intRand, intGuessesLeft = 6;
+    con.setDrawColor(new Color(100,149,237));
+    con.fillRect(0, 0, 1024, 576);
+    con.setDrawColor(Color.RED);
+    con.fillRect(425, 188, 175, 40);
+    con.fillRect(425, 258, 175, 40);
+    con.fillRect(425, 328, 175, 40);
+    con.setDrawColor(Color.WHITE);
+    con.drawString("Pick a Category", 418, 147);
+    con.drawString("Animals", 465, 185);
+    con.drawString("Food", 483, 255);
+    con.drawString("Countries", 455, 325);
+    con.repaint();
+    con.sleep(100);
+    while (strRandomWord.equals("")) {
+      if (con.currentMouseButton() == 1 && con.currentMouseX() >= 425 && con.currentMouseX() <= 600 && con.currentMouseY() >= 188 && con.currentMouseY() <= 228) {
+        String[] arrAnimals = {"cheetah", "armadillo", "bulldog", "caterpillar", "elephant", "squirrel", "giraffe", "anaconda", "seahorse", "butterfly", "lobster", "alligator", "chipmunk", "flamingo", "gorilla", "grasshopper", "hippopotamus", "raccoon","panther","dolphin","tortoise","opossum","ostrich"};
+        strRandomWord = arrAnimals[(int) (Math.random() * 24)];
+      }
+      if (con.currentMouseButton() == 1 && con.currentMouseX() >= 425 && con.currentMouseX() <= 600 && con.currentMouseY() >= 258 && con.currentMouseY() <= 298) {
+        String[] arrFood = {"eggplant", "hamburger", "blackberry", "avocado", "broccoli", "lollipop", "chicken", "sandwich", "zucchini", "watermelon", "spaghetti", "oatmeal", "pineapple", "asparagus", "chocolate", "guacamole", "hummus", "lasagna", "pancakes", "spinach", "pepperoni", "waffles", };
+        strRandomWord = arrFood[(int) (Math.random() * 22)];
+      }
+      if (con.currentMouseButton() == 1 && con.currentMouseX() >= 425 && con.currentMouseX() <= 600 && con.currentMouseY() >= 328 && con.currentMouseY() <= 368) {
+        String[] arrCountries = {"argentina", "belgium", "lithuania", "ethiopia", "netherlands", "afghanistan", "singapore", "philippines", "australia", "finland", "england", "ireland", "germany", "colombia", "denmark", "indonesia", "jamaica", "malaysia", "madagascar", "nigeria", "portugal", "switzerland", "thailand", "zimbabwe", "vietnam",};
+        strRandomWord = arrCountries[(int) (Math.random() * 25)];
+      }
+    }
+    con.sleep(100);
+    int intLength = strRandomWord.length();
+    int[] arrPastNums = new int[intLength];
+    strMysteryWord = strRandomWord.replaceAll("[a-zA-Z]", "_");
+    con.println("Enter your Guess");
+    for (int intCount = 0; intCount < 6; intCount++) {
+      con.setDrawColor(new Color(100,149,237));
+      con.fillRect(0, 0, 1024, 576);
+      con.setDrawColor(Color.RED);
+      con.fillRect(300, 30, 190, 50);
+      con.setDrawColor(Color.WHITE);
+      con.drawString("Mystery Word", 310, 32);
+      con.setDrawFont(GugiGame);
+      con.drawString(strMysteryWord, 300, 70);
+      con.setDrawFont(GugiLength);
+      con.drawString("Word Length: " + intLength, 300, 150);
+      con.setDrawFont(GugiMenu);
+      if(intGuessesLeft == 6) {
+        con.drawImage(con.loadImage("Hangman.png"), 700, 20);
+      }else if(intGuessesLeft == 5) {
+        con.drawImage(con.loadImage("Hangman2.png"), 700, 20);
+      }else if(intGuessesLeft == 4) {
+        con.drawImage(con.loadImage("Hangman3.png"), 700, 20);
+      }else if(intGuessesLeft == 3) {
+        con.drawImage(con.loadImage("Hangman4.png"), 700, 20);
+      }else if(intGuessesLeft == 2) {
+        con.drawImage(con.loadImage("Hangman5.png"), 700, 20);
+      }else if(intGuessesLeft == 1) {
+        con.drawImage(con.loadImage("Hangman6.png"), 700, 20);
+      }
+      con.drawString("Guesses Left:" + intGuessesLeft, 700, 300);
+      strGuessedWord = con.readLine();
+      if (strGuessedWord.equalsIgnoreCase(strRandomWord)) {
+        con.clear();
+        con.setDrawColor(new Color(100,149,237));
+        con.fillRect(0, 0, 1024, 576);
+        con.setDrawColor(Color.RED);
+        con.setDrawFont(GugiGame);
+        con.drawString("YOU WIN!!!!", 370, 200);
+        con.drawString("The Word Was: " + strRandomWord, 330,265);
+        con.repaint();
+        con.sleep(2000);
+        Hangman.menu();
+      }
+      intGuessesLeft = intGuessesLeft - 1;
+      intRand = (int) (Math.random() * intLength) + 0;
+      List<Integer> intList = new ArrayList<Integer>();
+      for (int intCount2 : arrPastNums) {
+        intList.add(intCount2);
+      }
+      while (intList.contains(intRand) && intCount < strRandomWord.length()) {
+        intRand = (int) (Math.random() * intLength) + 0;
+      }
+      strLetter = strRandomWord.substring(intRand,intRand+1);
+      strMysteryWord = strMysteryWord.substring(0,intRand) + strLetter + strMysteryWord.substring(intRand+1,intLength);
+      arrPastNums[intCount] = intRand;
+      System.out.println(Arrays.toString(arrPastNums));
+    }
+    con.clear();
+    con.setDrawColor(new Color(100,149,237));
+    con.fillRect(0, 0, 1024, 576);
+    con.setDrawColor(Color.RED);
+    con.setDrawFont(GugiGame);
+    con.drawString("YOU LOSE!!!!", 370, 200);
+    con.drawString("The Word Was: " + strRandomWord, 330,265);
+    con.repaint();
+    con.sleep(2000);
+    Hangman.menu();
+  }
+}
